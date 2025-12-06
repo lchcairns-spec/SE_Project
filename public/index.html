@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Voting System - HKMU</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1 class="logo">Online Voting System</h1>
+                <div class="nav-links">
+                    <span id="user-info" class="user-info"></span>
+                    <button id="logout-btn" class="btn btn-secondary" style="display: none;">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Login/Register Section -->
+        <div id="auth-section" class="container">
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="register">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="login-form" class="auth-form active">
+                    <h2>Login to Your Account</h2>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="login-email">Email (HKMU or @admin.com)</label>
+                            <input type="email" id="login-email" required placeholder="user@hkmu.edu.hk">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <div class="form-group" id="2fa-group" style="display: none;">
+                            <label for="2fa-token">2FA Token</label>
+                            <input type="text" id="2fa-token" placeholder="Enter 6-digit code">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <div id="login-error" class="error-message"></div>
+                    </form>
+                </div>
+
+                <!-- Register Form -->
+                <div id="register-form" class="auth-form">
+                    <h2>Create New Account</h2>
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="register-email">Email (HKMU or @admin.com)</label>
+                            <input type="email" id="register-email" required placeholder="user@hkmu.edu.hk">
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password (min 6 characters)</label>
+                            <input type="password" id="register-password" required minlength="6">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <div id="register-error" class="error-message"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content (after login) -->
+        <div id="main-section" class="container" style="display: none;">
+            <!-- Dashboard -->
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h2>Available Polls</h2>
+                    <div id="admin-actions" style="display: none;">
+                        <button id="create-poll-btn" class="btn btn-primary">Create Poll</button>
+                        <button id="admin-panel-btn" class="btn btn-secondary">Admin Panel</button>
+                    </div>
+                    <div id="creator-actions" style="display: none;">
+                        <button id="create-poll-btn-creator" class="btn btn-primary">Create Poll</button>
+                        <button id="my-polls-btn" class="btn btn-secondary">My Polls</button>
+                    </div>
+                </div>
+
+                <div id="polls-list" class="polls-grid"></div>
+            </div>
+        </div>
+
+        <!-- Poll Details Modal -->
+        <div id="poll-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="poll-details"></div>
+            </div>
+        </div>
+
+        <!-- Create Poll Modal -->
+        <div id="create-poll-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Create New Poll</h2>
+                <form id="createPollForm">
+                    <div class="form-group">
+                        <label for="poll-title">Poll Title</label>
+                        <input type="text" id="poll-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="poll-description">Description</label>
+                        <textarea id="poll-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="poll-type">Vote Type</label>
+                        <select id="poll-type" required>
+                            <option value="single">Single Choice</option>
+                            <option value="multiple">Multiple Choice</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="allow-revote"> Allow Revote
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="poll-start">Start Date (optional)</label>
+                        <input type="datetime-local" id="poll-start">
+                    </div>
+                    <div class="form-group">
+                        <label for="poll-end">End Date (optional)</label>
+                        <input type="datetime-local" id="poll-end">
+                    </div>
+                    <div class="form-group">
+                        <label for="poll-options">Options (one per line, min 2)</label>
+                        <textarea id="poll-options" rows="5" required placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Poll</button>
+                    <div id="create-poll-error" class="error-message"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Panel Modal -->
+        <div id="admin-modal" class="modal">
+            <div class="modal-content large">
+                <span class="close">&times;</span>
+                <h2>Admin Panel</h2>
+                <div class="admin-tabs">
+                    <button class="tab-btn active" data-admin-tab="polls">All Polls</button>
+                    <button class="tab-btn" data-admin-tab="users">Users</button>
+                    <button class="tab-btn" data-admin-tab="statistics">Statistics</button>
+                    <button class="tab-btn" data-admin-tab="audit">Audit Logs</button>
+                </div>
+                <div id="admin-content">
+                    <div id="admin-polls" class="admin-content-section"></div>
+                    <div id="admin-users" class="admin-content-section"></div>
+                    <div id="admin-statistics" class="admin-content-section active"></div>
+                    <div id="admin-audit" class="admin-content-section"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Polls Modal -->
+        <div id="my-polls-modal" class="modal">
+            <div class="modal-content large">
+                <span class="close">&times;</span>
+                <h2>My Polls</h2>
+                <div id="my-polls-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
