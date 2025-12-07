@@ -31,6 +31,7 @@ The system follows a secure multi-tier architecture:
 ## Installation
 
 ### Prerequisites
+- OS(ubuntu)
 - Node.js (v14 or higher)
 - npm or yarn
 
@@ -46,25 +47,7 @@ cd "Mini Project(Voting)"
 npm install
 ```
 
-3. **Configure environment variables**
-```bash
-cp .env.example .env
-```
-
-Edit `.env` file with your configuration:
-```env
-PORT=3000
-NODE_ENV=development
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-DB_PATH=./database/voting.db
-HKMU_EMAIL_DOMAIN=@hkmu.edu.hk
-ADMIN_EMAIL_DOMAIN=@admin.com
-```
-
-4. **Initialize the database**
-The database will be automatically created on first server start.
-
-5. **Start the server**
+3. **Start the server**
 ```bash
 npm start
 ```
@@ -74,7 +57,7 @@ For development with auto-reload:
 npm run dev
 ```
 
-6. **Access the application**
+4. **Access the application**
 Open your browser and navigate to:
 ```
 http://localhost:3000
