@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { getDatabase } = require('../database/init');
 const { logAudit } = require('../utils/audit');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Verify JWT token
 function authenticateToken(req, res, next) {
